@@ -303,14 +303,15 @@ class Connection {
 					this.#state = "sendResponseHeader";
 					break;
 
-				case "sendResponseHeader": {
-					const item = this.#options.headers.next();
-					if (item.done) {
-						this.#pendingWrite = "\r\n";
-						this.#state = "sendResponseBody";
-						delete this.#options.headers;
-					}
-					else {
+					case "sendResponseHeader": {
+						const item = this.#options.headers.next();
+						if (item.done) {
+							this.#pendingWrite = "\r\n";
+							this.#state = "sendResponseBody";
+							if (101 === this.#options.status)	// 101 Switching Protocols ...the empty line which terminates the 101 response
+								this.#remaining = 0;
+							delete this.#options.headers;
+						}					else {
 						const name = item.value[0];
 						this.#pendingWrite = name + ": " + item.value[1] + "\r\n";
 						if ("content-length" === name)
