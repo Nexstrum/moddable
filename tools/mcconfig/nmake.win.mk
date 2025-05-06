@@ -44,16 +44,13 @@ XSBUG_PORT = 5002
 !IFNDEF XSBUG_LOG_PORT
 XSBUG_LOG_PORT = 5002
 !ENDIF
-!IFNDEF XSBUG_LOG_PORT
-XSBUG_LOG_PORT = 5002
-!ENDIF
 !IFNDEF XSBUG_HOST
 XSBUG_HOST = localhost
 !ENDIF
 
 !IF "$(XSBUG_LOG)"=="1"
 !IF "$(XSBUG_HOST)"=="localhost"
-START_COMMAND = cmd /c "set "XSBUG_LOG_PORT=$(XSBUG_LOG_PORT)" && set "XSBUG_HOST=$(XSBUG_HOST)" && cd $(MODDABLE)\tools\xsbug-log && node xsbug-log start /B $(SIMULATOR) $(SIMULATORS) $(BIN_DIR)\mc.dll"
+START_COMMAND = cmd /c "set "XSBUG_LOG_PORT=$(XSBUG_LOG_PORT)" && set "XSBUG_PORT=$(XSBUG_PORT)" && set "XSBUG_HOST=$(XSBUG_HOST)" && cd $(MODDABLE)\tools\xsbug-log && node xsbug-log start /B $(SIMULATOR) $(SIMULATORS) $(BIN_DIR)\mc.dll"
 !ELSE
 START_COMMAND = cmd /c "set "XSBUG_PORT=$(XSBUG_PORT)" && set "XSBUG_HOST=$(XSBUG_HOST)" && start $(SIMULATOR) $(SIMULATORS) $(BIN_DIR)\mc.dll"
 !ENDIF
@@ -129,6 +126,11 @@ C_DEFINES = \
 	/D XS_ARCHIVE=1 \
 	/D INCLUDE_XSPLATFORM=1 \
 	/D XSPLATFORM=\"win_xs.h\" \
+	/D mxRun=1 \
+	/D mxNoFunctionLength=1 \
+	/D mxNoFunctionName=1 \
+	/D mxHostFunctionPrimitive=1 \
+	/D mxFewGlobalsTable=1 \
 	/D kCommodettoBitmapFormat=$(COMMODETTOBITMAPFORMAT) \
 	/D kPocoRotation=$(POCOROTATION)
 !IF "$(INSTRUMENT)"=="1"
@@ -163,7 +165,7 @@ C_FLAGS = $(C_FLAGS) \
 	/W0
 !ENDIF
 
-LINK_LIBRARIES = ws2_32.lib advapi32.lib comctl32.lib comdlg32.lib gdi32.lib kernel32.lib user32.lib ole32.lib dsound.lib wlanapi.lib Iphlpapi.lib winmm.lib Mfplat.lib Mf.lib Mfreadwrite.lib Mfuuid.lib
+LINK_LIBRARIES = ws2_32.lib advapi32.lib comctl32.lib comdlg32.lib gdi32.lib kernel32.lib user32.lib ole32.lib dsound.lib wlanapi.lib Iphlpapi.lib winmm.lib
 
 LINK_OPTIONS = /incremental:no /nologo /dll
 !IF "$(DEBUG)"=="1"
