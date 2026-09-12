@@ -40,7 +40,7 @@ declare module "embedded:network/http/server" {
         onResponse?(this: HTTPConnection, response: HTTPResponse): void;
         onWritable?(this: HTTPConnection, count: number): void;
         onDone?(this: HTTPConnection): void;
-        onError?(this: HTTPConnection): void;
+        onError?(this: HTTPConnection, error: string): void;
     }
 
     export interface HTTPConnection extends Disposable {
@@ -52,12 +52,15 @@ declare module "embedded:network/http/server" {
         write(bytes?: ByteBuffer): number;
         route: HTTPConnectionHandlers;
         format: "buffer";
+        protocol?: string;
     }
 
     export interface HTTPServerOptions {
-        io: typeof Listener;
+        socket: { io: typeof Listener } & Record<string, any>;
         port?: number;
-        onConnect(this: HTTPServer, connection: HTTPConnection): void;
+        keepAlive?: number;
+        onConnect?(this: HTTPServer, connection: HTTPConnection): void;
+        onRoute?(this: HTTPServer, request: HTTPRequest): any;
     }
 
     class HTTPServer {
