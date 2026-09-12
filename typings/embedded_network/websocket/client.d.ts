@@ -18,10 +18,13 @@
 *
 */
 
-// websocketclient.d.ts
+// websocket/client.d.ts
 
 declare module "embedded:network/websocket/client" {
-  interface WebSocketClientOptions {
+  import type TCP from "embedded:io/socket/tcp";
+  import type TLSSocket from "embedded:io/socket/tcp/tls";
+
+  export interface WebSocketClientOptions {
     onReadable?: (this: WebSocketClient, count: number, options: { more: boolean; binary: boolean }) => void;
     onWritable?: (this: WebSocketClient, count: number) => void;
     onControl?: (this: WebSocketClient, opcode: number, data: ArrayBuffer) => void;
@@ -29,23 +32,17 @@ declare module "embedded:network/websocket/client" {
     onError?: (this: WebSocketClient) => void;
     format?: "buffer" | "number";
     target?: any;
-    attach?: {
-      constructor: new (options: any) => any;
-    };
+    attach?: TCP | TLSSocket;
     host?: string;
     path?: string;
     port?: number;
     protocol?: string;
     headers?: Map<string, string>;
-    dns?: {
-      io: new (options: any) => any;
-    };
-    socket?: {
-      io: new (options: any) => any;
-    };
+    dns?: { io: new (options: any) => any } & Record<string, any>;
+    socket?: { io: new (options: any) => any } & Record<string, any>;
   }
 
-  interface WebSocketWriteOptions {
+  export interface WebSocketWriteOptions {
     opcode?: number;
     binary?: boolean;
     more?: boolean;

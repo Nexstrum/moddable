@@ -22,15 +22,14 @@ declare module "embedded:network/dns/resolver/udp" {
 
   interface Options {
     host: string
-    onResolved: ((host:string, address:any) => null)
-    onError: ((host:string) => null)
+    onResolved: ((host: string, address: any) => void)
+    onError: ((host: string) => void)
   }
 
   class Resolver {
     constructor(options: Record<string, any>)
     close(): void
     resolve(options: Options): void
-
   }
   interface Resolver extends Disposable {}
 

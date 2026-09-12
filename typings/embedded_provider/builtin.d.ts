@@ -30,6 +30,10 @@ declare module "embedded:provider/builtin" {
   import SPI from "embedded:io/spi";
   import Serial from "embedded:io/serial";
   import type { PinSpecifier } from "embedded:io/_common";
+  import type Listener from "embedded:io/socket/listener";
+  import type HTTPServer from "embedded:network/http/server";
+  import type WebSocketClient from "embedded:network/websocket/client";
+
   const device: {
     io: {
       Digital: typeof Digital;
@@ -52,6 +56,27 @@ declare module "embedded:provider/builtin" {
     SPI: { default: ConstructorParameters<typeof SPI>[0] };
     Serial: { default: ConstructorParameters<typeof Serial>[0] };
     pin: { [name: string]: PinSpecifier };
+    network: {
+      dns: {
+        resolver: Record<string, any>;
+      };
+      http: {
+        server: {
+          io: typeof HTTPServer;
+          socket: { io: typeof Listener } & Record<string, any>;
+        };
+      };
+      ws: {
+        io: typeof WebSocketClient;
+        dns: { io: new (options: any) => any } & Record<string, any>;
+        socket: { io: new (options: any) => any } & Record<string, any>;
+      };
+      wss: {
+        io: typeof WebSocketClient;
+        dns: { io: new (options: any) => any } & Record<string, any>;
+        socket: { io: new (options: any) => any } & Record<string, any>;
+      };
+    };
   };
   export default device;
 }
